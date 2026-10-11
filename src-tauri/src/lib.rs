@@ -1,9 +1,10 @@
 use daedric_core::{
     expected_load_order, names_from_modlist, plugin_set, read_hazards, read_install_ledger,
-    read_load_order, read_play_elsewhere, read_quarantine, read_release_book, read_runtime, Asar,
-    BuildGateReport, BuildManifest, CollectionLock, DllAllowlist, DownloadsReport, ElsewhereReport,
-    HazardReport, LedgerReport, LoadOrderReport, Manifest, OverlayReport, QuarantineReport,
-    ReleaseReport, RuntimeReport, ScanReport,
+    read_launch, read_load_order, read_play_elsewhere, read_quarantine, read_release_book,
+    read_runtime, read_troubleshoot, read_update_guard, Asar, BuildGateReport, BuildManifest,
+    CollectionLock, DllAllowlist, DownloadsReport, ElsewhereReport, HazardReport, LaunchReport,
+    LedgerReport, LoadOrderReport, Manifest, OverlayReport, QuarantineReport, ReleaseReport,
+    RuntimeReport, ScanReport, TroubleshootReport, UpdateGuardReport,
 };
 use serde::Serialize;
 use serde_json::Value;
@@ -171,6 +172,37 @@ fn read_play_elsewhere_cmd(skyrim_root: String) -> Result<ElsewhereReport, Strin
     Ok(read_play_elsewhere(&PathBuf::from(skyrim_root)))
 }
 
+#[tauri::command(rename = "read_launch")]
+fn read_launch_cmd(skyrim_root: String, asar_path: String) -> Result<LaunchReport, String> {
+    Ok(read_launch(
+        &PathBuf::from(skyrim_root),
+        &PathBuf::from(asar_path),
+        None,
+    ))
+}
+
+#[tauri::command(rename = "read_update_guard")]
+fn read_update_guard_cmd(
+    skyrim_root: String,
+    asar_path: String,
+) -> Result<UpdateGuardReport, String> {
+    Ok(read_update_guard(
+        &PathBuf::from(skyrim_root),
+        &PathBuf::from(asar_path),
+    ))
+}
+
+#[tauri::command(rename = "read_troubleshoot")]
+fn read_troubleshoot_cmd(
+    skyrim_root: String,
+    asar_path: String,
+) -> Result<TroubleshootReport, String> {
+    Ok(read_troubleshoot(
+        &PathBuf::from(skyrim_root),
+        &PathBuf::from(asar_path),
+    ))
+}
+
 #[tauri::command(rename = "read_hazards")]
 fn read_hazards_cmd(skyrim_root: String) -> Result<HazardReport, String> {
     Ok(read_hazards(&PathBuf::from(skyrim_root)))
@@ -191,6 +223,9 @@ pub struct FullDoctorReport {
     pub release: ReleaseReport,
     pub elsewhere: ElsewhereReport,
     pub hazards: HazardReport,
+    pub launch: LaunchReport,
+    pub update_guard: UpdateGuardReport,
+    pub troubleshoot: TroubleshootReport,
 }
 
 /// Full install-doctor sweep: decode contracts, scan the esp gate, the
@@ -237,6 +272,9 @@ fn run_full_doctor(skyrim_root: String, asar_path: String) -> Result<FullDoctorR
     let release = read_release_book(&root);
     let elsewhere = read_play_elsewhere(&root);
     let hazards = read_hazards(&root);
+    let launch = read_launch(&root, &asar, None);
+    let update_guard = read_update_guard(&root, &asar);
+    let troubleshoot = read_troubleshoot(&root, &asar);
 
     Ok(FullDoctorReport {
         esp,
@@ -251,6 +289,9 @@ fn run_full_doctor(skyrim_root: String, asar_path: String) -> Result<FullDoctorR
         release,
         elsewhere,
         hazards,
+        launch,
+        update_guard,
+        troubleshoot,
     })
 }
 
@@ -272,6 +313,9 @@ pub fn run() {
             read_release_book_cmd,
             read_play_elsewhere_cmd,
             read_hazards_cmd,
+            read_launch_cmd,
+            read_update_guard_cmd,
+            read_troubleshoot_cmd,
             run_full_doctor,
         ])
         .run(tauri::generate_context!())

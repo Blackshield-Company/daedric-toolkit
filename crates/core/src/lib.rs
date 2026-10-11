@@ -12,10 +12,12 @@ pub mod extract;
 pub mod field;
 pub mod hash;
 pub mod hazards;
+pub mod launch;
 pub mod manifest;
 pub mod overlay;
 pub mod play;
 pub mod scan;
+pub mod troubleshoot;
 pub mod verify;
 
 pub use asar::Asar;
@@ -25,6 +27,7 @@ pub use field::{
     read_quarantine, LedgerReport, LoadOrderReport, QuarantineReport,
 };
 pub use hazards::{read_hazards, HazardReport};
+pub use launch::{read_launch, read_update_guard, LaunchReport, UpdateGuardReport};
 pub use manifest::Manifest;
 pub use overlay::{check_overlay, read_installed_overlay, OverlayReport, OverlayVerdict};
 pub use play::{
@@ -32,4 +35,5 @@ pub use play::{
     ReleaseReport, RuntimeReport,
 };
 pub use scan::{scan_install, FileVerdict, ScanReport};
+pub use troubleshoot::{read_troubleshoot, TroubleshootReport};
 pub use verify::{scan_build_gate, verify_downloads, BuildGateReport, DownloadsReport};

@@ -167,6 +167,40 @@
         <button class="btn btn-small" id="scan-haz">Read leftovers</button>
         <ul class="fail-list" id="list-haz"></ul>
       </div>
+
+      <div class="card panel" id="panel-launch">
+        <div class="panel-head">
+          <h2>Launch</h2>
+          <span class="badge badge-idle" id="badge-launch">IDLE</span>
+        </div>
+        <p class="panel-sub">umu-run, UMU_USE_STEAM=1, GE-Proton11-7, prefix umu-489830 — the default on every distro. The Steam shortcut is only for a failed umu launch.</p>
+        <div class="counts"><span class="count-ok" id="ok-launch">—</span> / <span class="count-fail" id="fail-launch">0 problems</span></div>
+        <button class="btn btn-small" id="scan-launch">Read launch</button>
+        <ul class="fail-list" id="list-launch"></ul>
+        <pre class="recipe" id="recipe-launch"></pre>
+      </div>
+
+      <div class="card panel" id="panel-guard">
+        <div class="panel-head">
+          <h2>Update Guard</h2>
+          <span class="badge badge-idle" id="badge-guard">IDLE</span>
+        </div>
+        <p class="panel-sub">appmanifest_489830.acf: AutoUpdateBehavior=2, locked read-only on the Steam shortcut. Steam closed first; chmod 644 reverts.</p>
+        <div class="counts"><span class="count-ok" id="ok-guard">—</span> / <span class="count-fail" id="fail-guard">0 problems</span></div>
+        <button class="btn btn-small" id="scan-guard">Read update guard</button>
+        <ul class="fail-list" id="list-guard"></ul>
+      </div>
+
+      <div class="card panel" id="panel-fix">
+        <div class="panel-head">
+          <h2>Troubleshooting</h2>
+          <span class="badge badge-idle" id="badge-fix">IDLE</span>
+        </div>
+        <p class="panel-sub">LZ4-corrupt texture BSAs, loose-file case, behavior generation (A-poses), SkyrimPrefs.ini fullscreen</p>
+        <div class="counts"><span class="count-ok" id="ok-fix">—</span> / <span class="count-fail" id="fail-fix">0 problems</span></div>
+        <button class="btn btn-small" id="scan-fix">Read troubleshooting</button>
+        <ul class="fail-list" id="list-fix"></ul>
+      </div>
     </section>
   </main>
 

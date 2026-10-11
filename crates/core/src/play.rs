@@ -96,7 +96,7 @@ pub fn read_runtime(skyrim_root: &Path, accepted: &[String]) -> RuntimeReport {
             "missing" => "SkyrimSE.exe is not in the game folder.".to_string(),
             "unknown" => "SkyrimSE.exe has no readable FileVersion.".to_string(),
             "too-new" => format!(
-                "Skyrim is {}. Daedric Online needs {required}. A newer build will not load the script extender.",
+                "Skyrim is {}. Daedric Online needs {required}. A newer build will not load the script extender. Steam updated it: re-run scripts/downgrade-1.6.1170.sh (Step 7), then lock steamapps/appmanifest_489830.acf read-only with Steam closed.",
                 installed.as_deref().unwrap_or("unreadable")
             ),
             "too-old" => format!(

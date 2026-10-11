@@ -242,7 +242,7 @@ fn collect_names(value: &Value, out: &mut BTreeMap<String, String>) {
     }
 }
 
-fn ci_child(dir: &Path, name: &str) -> Option<PathBuf> {
+pub(crate) fn ci_child(dir: &Path, name: &str) -> Option<PathBuf> {
     let direct = dir.join(name);
     if direct.exists() {
         return Some(direct);
@@ -255,7 +255,7 @@ fn ci_child(dir: &Path, name: &str) -> Option<PathBuf> {
     })
 }
 
-fn wine_prefix_from_asar(asar: &Path) -> Option<PathBuf> {
+pub(crate) fn wine_prefix_from_asar(asar: &Path) -> Option<PathBuf> {
     let mut cur = asar.parent();
     while let Some(dir) = cur {
         if dir
@@ -270,7 +270,7 @@ fn wine_prefix_from_asar(asar: &Path) -> Option<PathBuf> {
     None
 }
 
-fn steam_library_root(game: &Path) -> Option<PathBuf> {
+pub(crate) fn steam_library_root(game: &Path) -> Option<PathBuf> {
     let mut cur = Some(game);
     while let Some(dir) = cur {
         if dir

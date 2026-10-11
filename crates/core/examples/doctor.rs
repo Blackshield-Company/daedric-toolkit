@@ -215,4 +215,38 @@ fn main() {
     for issue in hazards.issues.iter().take(12) {
         println!("    {} {}", issue.kind, issue.name);
     }
+
+    println!("\n== launch / update guard / troubleshooting ==");
+    let launch = daedric_core::read_launch(&root, &asar, None);
+    println!(
+        "  launch: method={} prefix={:?} proton={:?} failed={}",
+        launch.method, launch.prefix, launch.proton, launch.failed
+    );
+    println!("    {}", launch.note);
+    for line in &launch.recipe {
+        println!("    | {line}");
+    }
+    for issue in &launch.issues {
+        println!("    {} {}", issue.kind, issue.detail);
+    }
+    let guard = daedric_core::read_update_guard(&root, &asar);
+    println!(
+        "  update guard: manifest={:?} auto_update={:?} locked={:?} failed={}",
+        guard.manifest, guard.auto_update, guard.locked, guard.failed
+    );
+    println!("    {}", guard.note);
+    let fix = daedric_core::read_troubleshoot(&root, &asar);
+    println!(
+        "  troubleshooting: bsas={} case_misses={} behavior={:?}/{} display_tweaks={} failed={}",
+        fix.textures.len(),
+        fix.case_misses,
+        fix.behavior_engine,
+        fix.behavior_generated,
+        fix.display_tweaks,
+        fix.failed
+    );
+    println!("    {}", fix.note);
+    for issue in fix.issues.iter().take(12) {
+        println!("    {} {}", issue.kind, issue.detail);
+    }
 }

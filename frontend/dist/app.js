@@ -266,6 +266,33 @@
     renderIssues("haz", report, bits.join(" · "));
   }
 
+  function renderLaunch(report) {
+    renderIssues("launch", report, report.method || "—");
+    var lines = (report.recipe || []).slice();
+    var umuFailed = (report.issues || []).some(function (i) { return i.kind === "umu-failed"; });
+    if ((umuFailed || report.method === "steam-shortcut") && report.fallback && report.fallback.length) {
+      lines.push("", "# fallback only — umu failed:");
+      report.fallback.forEach(function (step, i) { lines.push("# " + (i + 1) + ". " + step); });
+    }
+    $("recipe-launch").textContent = lines.join("\n");
+  }
+
+  function renderGuard(report) {
+    var label = report.locked === true ? "locked" : report.locked === false ? "unlocked" : "no manifest";
+    if (report.auto_update) label += " · auto-update " + report.auto_update;
+    renderIssues("guard", report, label);
+  }
+
+  function renderFix(report) {
+    var bad = (report.textures || []).reduce(function (n, t) { return n + (t.bad || 0); }, 0);
+    var bits = [
+      (report.textures || []).length + " BSA · " + bad + " bad",
+      report.case_misses + " case",
+      report.display_tweaks ? "display tweaks" : "prefs",
+    ];
+    renderIssues("fix", report, bits.join(" · "));
+  }
+
   function renderLedger(report) {
     $("ok-ledger").textContent = report.recorded + " recorded";
     $("fail-ledger").textContent = report.named + " named";
@@ -347,7 +374,7 @@
 
   function setBusy(busy) {
     runBtn.disabled = busy;
-    ["scan-esp", "scan-gate", "scan-dl", "scan-quar", "scan-load", "scan-ledger", "scan-rt", "scan-rel", "scan-else", "scan-haz"].forEach(function (id) {
+    ["scan-esp", "scan-gate", "scan-dl", "scan-quar", "scan-load", "scan-ledger", "scan-rt", "scan-rel", "scan-else", "scan-haz", "scan-launch", "scan-guard", "scan-fix"].forEach(function (id) {
       $(id).disabled = busy;
     });
     runBtn.textContent = busy ? "CONSULTING THE GATE…" : "RUN FULL DOCTOR";
@@ -375,6 +402,9 @@
         renderRelease(report.release);
         renderElsewhere(report.elsewhere);
         renderHazards(report.hazards);
+        renderLaunch(report.launch);
+        renderGuard(report.update_guard);
+        renderFix(report.troubleshoot);
         var driftNote =
           report.overlay.verdict === "Drift"
             ? " (overlay drift — failures are version skew)"
@@ -388,7 +418,10 @@
           (report.runtime ? report.runtime.failed : 0) +
           (report.release ? report.release.failed : 0) +
           (report.elsewhere ? report.elsewhere.failed : 0) +
-          (report.hazards ? report.hazards.failed : 0);
+          (report.hazards ? report.hazards.failed : 0) +
+          (report.launch ? report.launch.failed : 0) +
+          (report.update_guard ? report.update_guard.failed : 0) +
+          (report.troubleshoot ? report.troubleshoot.failed : 0);
         setStatus(
           totalFail === 0
             ? "the gate holds. every contract passes." + driftNote
@@ -484,6 +517,27 @@
     runSingle("scan-haz", "haz", "read_hazards", {
       skyrimRoot: rootInput.value,
     }, renderHazards);
+  });
+
+  $("scan-launch").addEventListener("click", function () {
+    runSingle("scan-launch", "launch", "read_launch", {
+      skyrimRoot: rootInput.value,
+      asarPath: asarInput.value,
+    }, renderLaunch);
+  });
+
+  $("scan-guard").addEventListener("click", function () {
+    runSingle("scan-guard", "guard", "read_update_guard", {
+      skyrimRoot: rootInput.value,
+      asarPath: asarInput.value,
+    }, renderGuard);
+  });
+
+  $("scan-fix").addEventListener("click", function () {
+    runSingle("scan-fix", "fix", "read_troubleshoot", {
+      skyrimRoot: rootInput.value,
+      asarPath: asarInput.value,
+    }, renderFix);
   });
 
   // Decode the contract strip on load so the UI opens with context.
