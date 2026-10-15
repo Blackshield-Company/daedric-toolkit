@@ -62,4 +62,4 @@ Paths are resolved case-insensitively, one component at a time. That matches Win
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE). Tags before this change stay Apache-2.0.
