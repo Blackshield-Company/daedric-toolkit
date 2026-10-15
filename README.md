@@ -1,3 +1,5 @@
+![daedric-toolkit](.github/preview.png)
+
 # Daedric Toolkit
 
 Install doctor for [Daedric Online](https://daedriconline.com). It reads the launcher's `app.asar` contract and checks a Skyrim Special Edition install against it: plugin hashes, loose-file pins, SKSE DLL allowlist, archive checksums, overlay-version drift, quarantined plugins, the Plugins.txt load order, the launcher's install ledger, the SkyrimSE.exe build, the release book, the play-elsewhere toggle, known-bad files, foreign client plugins, parked Anniversary Edition files, the launch method, the Steam update guard, and the Linux troubleshooting checks.
